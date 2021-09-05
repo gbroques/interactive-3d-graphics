@@ -62,7 +62,7 @@ Frequently mispelled with an "r" as "frust**r**um".
 ## 3D Scene
 
 * Objects
-  * Geometry + Material ➕ 🪵
+  * Geometry + Material ➕ 📐
 * Lights 💡
 * Camera 🎥
 
