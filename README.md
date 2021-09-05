@@ -2,6 +2,18 @@
 
 Notes for [Udacity's Interactive 3D Graphics course](https://www.udacity.com/course/interactive-3d-graphics--cs291).
 
+## How to Run
+
+1. Install dependencies (*one time*).
+
+       npm install
+
+2. Run local server.
+
+       npm run serve
+
+3. Navigate to http://localhost:8080/.
+
 ## Links
 
 * [Course Website](https://www.udacity.com/wiki/cs291)
