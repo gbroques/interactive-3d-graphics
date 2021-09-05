@@ -1,8 +1,9 @@
-# Interactive 3D Graphics - Udacity
+# Interactive 3D Graphics
+
+Notes for [Udacity's Interactive 3D Graphics course](https://www.udacity.com/course/interactive-3d-graphics--cs291).
 
 ## Links
 
-* [Udacity Landing Page](https://www.udacity.com/course/interactive-3d-graphics--cs291)
 * [Course Website](https://www.udacity.com/wiki/cs291)
 * [Syllabus](https://www.udacity.com/wiki/cs291/syllabus)
 * [Three.js Demos](https://www.realtimerendering.com/udacity/)
