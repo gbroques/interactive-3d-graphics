@@ -73,7 +73,7 @@
         </div>
     </main>
 <script>
-    let cleanUp;
+    let cleanUp = null;
     function onSelect(event) {
         const src = event.target.value;
         if (src) {
@@ -81,7 +81,10 @@
                 cleanUp = cleanUpFunction;
             });
         } else {
-            cleanUp();
+            if (cleanUp) {
+                cleanUp();
+                cleanUp = null;
+            }
         }
     }
 
