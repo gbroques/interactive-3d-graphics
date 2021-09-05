@@ -119,7 +119,7 @@ Application -> Camera & Model Transform -> Rasterization
 1. Application sends objects to the GPU. Typically 3D triangles.
 2. Triangles are modified by the camera's view of the world and any modeling transformations.
 3. Translates triangle locations computed in step #2 into pixels.
-  * Identifies all the pixels whose centers are inside the triangle.
+   1. Identifies all the pixels whose centers are inside the triangle.
 
 ### Pipeline Parallelism
 
