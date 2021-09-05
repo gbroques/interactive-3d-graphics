@@ -61,7 +61,7 @@
         Interactive 3D Graphics
         <select onchange="onSelect(event)" name="" id="">
             <option value=""></option>
-            <option value="./lesson1/gold-cube.js">Unit 1: gold-cube.js</option>
+            <option value="./lesson1/gold-cube.js">1: gold-cube.js</option>
         </select>
     </header>
     <main>
@@ -96,6 +96,7 @@
             return showDemo(module.default, previousCtaDisplay);
         });
     }
+
     function showDemo(Demo, previousCtaDisplay) {
         const rootDomElement = document.getElementById('container');
         const header = document.getElementsByTagName('header')[0];
@@ -118,7 +119,6 @@
             cta.style.display = previousCtaDisplay;
         };
     }
-
 </script>
 </body>
 </html>
