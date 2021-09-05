@@ -129,8 +129,10 @@ Each step in the pipeline can be done independently (in parallel).
 
 The worst performing step in the pipeline bottlenecks the entire pipeline.
 
+```
 A -> B -> C -> D
 1    3    1    1
+```
 
 B is the **B**ottleneck in the pipeline since it takes the longest amount of time (i.e. 3 units of time instead of 1).
 
@@ -155,9 +157,9 @@ Cycles where each object is in front of the next.
 ## Z-Buffer
 GPU solves the visibility problem using a [Z-Buffer](https://en.wikipedia.org/wiki/Z-buffering).
 
-> Landscape paining is really just a box of air with little marks in it telling you how far back in that air things are.
+> *Landscape paining is really just a box of air with little marks in it telling you how far back in that air things are.*
 
-- Lennart Anderson
+> — **Lennart Anderson**
 
 Z - Distance from camera.
 
