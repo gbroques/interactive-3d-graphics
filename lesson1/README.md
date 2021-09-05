@@ -43,13 +43,13 @@ http://www.realtimerendering.com/udacity/?load=demo/unit1-fps.js
 
 Image is upside down.
 
-![Eye Camera](./eye-camera.png)
+![Eye Camera](./img/eye-camera.png)
 
 [image source](https://www.researchgate.net/figure/Optical-focusing-system-of-the-human-eye-and-a-photographic-camera-showing-the_fig1_224322366)
 
 ## View Frustum
 
-![View Frustum](./view-frustum.svg)
+![View Frustum](./img/view-frustum.svg)
 
 A view frustum is a more convenient way to think of a camera for computer graphics.
 
@@ -73,7 +73,7 @@ http://ushiroad.com/3j/
 
 It'd be very expensive to track all the photons in a scene.
 
-![Tracking All Photons](light-and-rendering-all-photons.png)
+![Tracking All Photons](./img/light-and-rendering-all-photons.png)
 
 Only the photons reaching the camera are tracked.
 
@@ -81,7 +81,7 @@ Only the photons reaching the camera are tracked.
 * Cast a ray to a point and sum direct lighting
 * No shadows
 
-![Tracking Only Photons Reaching Camera](light-and-rendering-reverse-process.png)
+![Tracking Only Photons Reaching Camera](./img/light-and-rendering-reverse-process.png)
 
 ## The Teapot
 Iconic object and symbol of 3D computer graphics.
@@ -90,7 +90,7 @@ Iconic object and symbol of 3D computer graphics.
 
 Co-developed the [Painter's algorithm](https://en.wikipedia.org/wiki/Painter%27s_algorithm).
 
-![Utah teapot](./utah-teapot.jpg)
+![Utah teapot](./img/utah-teapot.jpg)
 
 Inspired by a real live [Melitta](https://en.wikipedia.org/wiki/Melitta) teapot manufactured in 1974.
 
@@ -104,7 +104,7 @@ Which of the following objects can be rendered by that system:
 * Light bulb ✔️
 * Glass ball ❌
 
-![simple materials](./simple-materials.png)
+![simple materials](./img/simple-materials.png)
 
 ## Graphics Pipeline
 A pipeline deals with objects separately.
@@ -146,13 +146,13 @@ Draw each object, on one top of the other.
 1. Sort objects based on the distance to the camera, back to front.
 2. Render the most distant object first, render the next closest object, then the next closest object, and the closest object to the camera last.
 
-![Painter's Algorithm](./Painter's_algorithm.svg)
+![Painter's Algorithm](./img/Painter's_algorithm.svg)
 
 Has a serious limitation.
 
 Cycles where each object is in front of the next.
 
-![Painter's Algorithm Cycle](./painters-algorithm-cycle.jpg)
+![Painter's Algorithm Cycle](./img/painters-algorithm-cycle.jpg)
 
 ## Z-Buffer
 GPU solves the visibility problem using a [Z-Buffer](https://en.wikipedia.org/wiki/Z-buffering).
@@ -172,7 +172,6 @@ Where 0.0 is the closest to the eye and 1.0 is the maximum distance from the eye
 
 Z-Buffer intially set to all 1.0.
 
-![z buffer](./zbuffer.jpg)
+![z buffer](./img/zbuffer.jpg)
 
 Objects are drawn from front to back for optimal performance.
-
