@@ -5,9 +5,9 @@ http://www.realtimerendering.com/blog/
 
 ## Interactive 3D Rendering
 
-Rendering - Depict or create an image.
-3D - Define things in a 3D world, and render onto a 2D screen.
-Interactive - Influence or affect something in a 3D virtual world.
+* *Rendering* - Depict or create an image.
+* *3D* - Define things in a 3D world, and render onto a 2D screen.
+* *Interactive* - Influence or affect something in a 3D virtual world.
 
 ## WebGL
 Web **G**raphics **L**ibrary.
