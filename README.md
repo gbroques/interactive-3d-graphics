@@ -6,6 +6,8 @@
 * [Course Website](https://www.udacity.com/wiki/cs291)
 * [Syllabus](https://www.udacity.com/wiki/cs291/syllabus)
 * [Three.js Demos](https://www.realtimerendering.com/udacity/)
+  * [Demos Organized by Lesson](https://www.udacity.com/wiki/cs291/demos)
+* [GitHub Repository](https://github.com/udacity/cs291)
 
 ## Table of Contents
 
