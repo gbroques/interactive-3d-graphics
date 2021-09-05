@@ -46,3 +46,28 @@ To convert between the two systems, negate the Z Axis.
 We care about representing how light reflects off an object's surface, rather than representing a solid volume.
 
 Hence, 2 dimensions is as far as the GPU models for 3 dimensions.
+
+## Creating Geometry in Three.js
+
+```js
+const triangle = new THREE.Geometry();
+triangle.vertices.push( new THREE.Vector3( 1, 1, 0 ) ); // 0
+triangle.vertices.push( new THREE.Vector3( 3, 1, 0 ) ); // 1
+triangle.vertices.push( new THREE.Vector3( 3, 3, 0 ) ); // 2
+
+// Correspond to vertex indices.
+triangle.faces.push( new THREE.Face3( 0, 1, 2 ) );
+```
+
+## Tessellation & Triangulation
+From greek word, "tesella" - meaning a small stone in a mosaic.
+
+**Tessellation** - breaking up an object into polygons.
+
+**Triangulation** - Breaking up a polygon into triangles. A particular form of *tessellation*.
+
+## Minimum Triangulation
+
+A polygon with *N* edges, needs *N* - 2 triangles.
+
+## Vertex Ordering and Culling
