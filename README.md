@@ -11,6 +11,10 @@ Notes for [Udacity's Interactive 3D Graphics course](https://www.udacity.com/cou
 2. Run local server.
 
        npm run serve
+  
+   Alternatively, you may run:
+
+       npm start
 
 3. Navigate to http://localhost:8080/.
 
