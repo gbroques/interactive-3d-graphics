@@ -12,7 +12,7 @@ export default class Demo {
 
     this._camera = createCamera(width, height);
     this._scene = createScene();
-    this._renderer = createRenderer(width, height, this._scene.fog.color);
+    this._renderer = createRenderer(width, height);
     this._orbitControls = createOrbitControls(this._camera, this._renderer.domElement);
 
     this._animate();
@@ -57,10 +57,9 @@ function createCamera(width, height) {
   return camera;
 }
 
-function createRenderer(width, height, clearColor) {
+function createRenderer(width, height) {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(width, height);
-  renderer.setClearColor(clearColor, 1);
   return renderer;
 }
 
@@ -72,11 +71,22 @@ function createOrbitControls(camera, domElement) {
 
 function createScene() {
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x808080, 2000, 4000);
   // LIGHTS
   scene.add(new THREE.AmbientLight(0x222222));
+
   const goldCube = createGoldCube();
   scene.add(goldCube);
+
+  const XZGridPlane = new THREE.GridHelper(1000, 10);
+  scene.add(XZGridPlane);
+
+  const YZGridPlane = new THREE.GridHelper(1000, 10);
+  YZGridPlane.geometry.rotateZ(Math.PI / 2);
+  scene.add(YZGridPlane);
+
+  const axesHelper = new THREE.AxesHelper(200);
+  scene.add(axesHelper);
+
   return scene;
 }
 

@@ -33,3 +33,16 @@ Duration is given, but no starting time.
 * Z Axis - Middle Fingler along Z Axis (reaches back into the page)
 
 To convert between the two systems, negate the Z Axis.
+
+## 3 GPU Primitives
+
+1. Points - **1** (x, y, z) triplet ⚈
+     1. **0** dimensions
+2. Line Segments - **2** (x, y, z) triplets 📏
+     1. **1** dimension
+3. Triangles (*most important*) - **3** (x, y, z) triplets 🔺
+     1. **2** dimensions
+
+We care about representing how light reflects off an object's surface, rather than representing a solid volume.
+
+Hence, 2 dimensions is as far as the GPU models for 3 dimensions.
