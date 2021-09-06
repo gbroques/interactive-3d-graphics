@@ -133,42 +133,26 @@ function drawSquare(p1, p2) {
 
   const vertices = [
     // bottom left
-    { pos: [x1, y1, 0], norm: [0, 0, 1], uv: [0, 0] },
+    x1, y1, 0,
     // bottom right
-    { pos: [x2, y1, 0], norm: [0, 0, 1], uv: [1, 0] },
+    x2, y1, 0,
     // top left
-    { pos: [x1, y2, 0], norm: [0, 0, 1], uv: [0, 1] },
-
-    // top left
-    { pos: [x1, y2, 0], norm: [0, 0, 1], uv: [0, 1] },
-    // bottom right
-    { pos: [x2, y1, 0], norm: [0, 0, 1], uv: [1, 0] },
+    x1, y2, 0,
     // top right
-    { pos: [x2, y2, 0], norm: [0, 0, 1], uv: [1, 1] },
+    x2, y2, 0,
   ];
-  const positions = [];
-  const normals = [];
-  const uvs = [];
-  // eslint-disable-next-line no-restricted-syntax
-  for (const vertex of vertices) {
-    positions.push(...vertex.pos);
-    normals.push(...vertex.norm);
-    uvs.push(...vertex.uv);
-  }
-  const positionNumComponents = 3;
-  const normalNumComponents = 3;
-  const uvNumComponents = 2;
+  const indices = [
+    // bottom right triangle
+    0, 1, 3,
+    // top right triangle
+    2, 3, 0,
+  ];
+
   geometry.setAttribute(
     'position',
-    new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents),
+    new THREE.Float32BufferAttribute(vertices, 3),
   );
-  geometry.setAttribute(
-    'normal',
-    new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents),
-  );
-  geometry.setAttribute(
-    'uv',
-    new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents),
-  );
+  geometry.setIndex(indices);
+
   return geometry;
 }
