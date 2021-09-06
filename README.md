@@ -30,3 +30,4 @@ Notes for [Udacity's Interactive 3D Graphics course](https://www.udacity.com/cou
 
 * [Lesson 1: Introduction](./lesson1/README.md)
 * [Lesson 2: Points, Vectors, and Meshes](./lesson2/README.md)
+* [Lesson 3: Colors and Materials](./lesson3/README.md)
