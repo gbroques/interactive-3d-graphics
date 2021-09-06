@@ -79,15 +79,14 @@
     let cleanUp = null;
     function onSelect(event) {
         const src = event.target.value;
+        if (cleanUp) {
+            cleanUp();
+            cleanUp = null;
+        }
         if (src) {
             loadScript(src).then(cleanUpFunction => {
                 cleanUp = cleanUpFunction;
             });
-        } else {
-            if (cleanUp) {
-                cleanUp();
-                cleanUp = null;
-            }
         }
     }
 
