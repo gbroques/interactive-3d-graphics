@@ -85,7 +85,11 @@ function createScene() {
   scene.add(ambientLight);
   scene.add(light);
   scene.add(light2);
-  createDrinkingBird();
+  const drinkingBirdMeshes = createDrinkingBird();
+
+  drinkingBirdMeshes.forEach((mesh) => {
+    scene.add(mesh);
+  });
 
   return scene;
 }
@@ -94,58 +98,65 @@ function createScene() {
 function createSupport() {
   const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xF07020 });
   // base
-  let cube;
-  cube = new THREE.Mesh(
+  const base = new THREE.Mesh(
     new THREE.BoxGeometry(20 + 64 + 110, 4, 2 * 77), cubeMaterial,
   );
-  cube.position.x = -45;	// (20+32) - half of width (20+64+110)/2
-  cube.position.y = 4 / 2;	// half of height
-  cube.position.z = 0;	// centered at origin
-  scene.add(cube);
+  base.position.x = -45; // (20+32) - half of width (20+64+110)/2
+  base.position.y = 4 / 2; // half of height
+  base.position.z = 0; // centered at origin
 
   // left foot
-  cube = new THREE.Mesh(
+  const leftFoot = new THREE.Mesh(
     new THREE.BoxGeometry(20 + 64 + 110, 52, 6), cubeMaterial,
   );
-  cube.position.x = -45;	// (20+32) - half of width (20+64+110)/2
-  cube.position.y = 52 / 2;	// half of height
-  cube.position.z = 77 + 6 / 2;	// offset 77 + half of depth 6/2
-  scene.add(cube);
+  leftFoot.position.x = -45; // (20+32) - half of width (20+64+110)/2
+  leftFoot.position.y = 52 / 2; // half of height
+  leftFoot.position.z = 77 + 6 / 2; // offset 77 + half of depth 6/2
 
   // left leg
-  cube = new THREE.Mesh(
+  const leftLeg = new THREE.Mesh(
     new THREE.BoxGeometry(64, 334 + 52, 6), cubeMaterial,
   );
-  cube.position.x = 0;	// centered on origin along X
-  cube.position.y = (334 + 52) / 2;
-  cube.position.z = 77 + 6 / 2;	// offset 77 + half of depth 6/2
-  scene.add(cube);
+  leftLeg.position.x = 0; // centered on origin along X
+  leftLeg.position.y = (334 + 52) / 2;
+  leftLeg.position.z = 77 + 6 / 2; // offset 77 + half of depth 6/2
 
   // right foot
 
   // right leg
+
+  return [
+    base,
+    leftFoot,
+    leftLeg,
+  ];
 }
 
 // Body of the bird - body and the connector of body and head
 function createBody() {
   const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xA00000 });
   const cylinderMaterial = new THREE.MeshLambertMaterial({ color: 0x0000D0 });
+  return [];
 }
 
 // Head of the bird - head + hat
 function createHead() {
   const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xA00000 });
   const cylinderMaterial = new THREE.MeshLambertMaterial({ color: 0x0000D0 });
+  return [];
 }
 
 function createDrinkingBird() {
   // MODELS
   // base + legs + feet
-  createSupport();
+  const supportMeshes = createSupport();
 
   // body + body/head connector
-  createBody();
+  const bodyMeshes = createBody();
 
   // head + hat
-  createHead();
+  const headMeshes = createHead();
+  return supportMeshes
+    .concat(bodyMeshes)
+    .concat(headMeshes);
 }
