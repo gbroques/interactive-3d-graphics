@@ -1,7 +1,6 @@
 /* eslint-env browser */
 import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
-import { GUI } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/libs/dat.gui.module';
 
 export default class Stairway {
   constructor(options) {
@@ -12,16 +11,14 @@ export default class Stairway {
     } = options;
 
     this._camera = createCamera(width, height);
-    this._controller = {};
     this._scene = createScene();
     this._renderer = createRenderer(width, height);
     this._orbitControls = createOrbitControls(this._camera, this._renderer.domElement);
 
     this._animate();
 
-    const gui = createGUI(this._controller);
     this._render();
-    this._mount(rootDomElement, gui.domElement);
+    this._mount(rootDomElement);
   }
 
   resize(width, height) {
@@ -30,13 +27,8 @@ export default class Stairway {
     this._renderer.setSize(width, height);
   }
 
-  _mount(rootDomElement, guiDomElement) {
-    const { top } = rootDomElement.getBoundingClientRect();
+  _mount(rootDomElement) {
     rootDomElement.appendChild(this._renderer.domElement);
-    const guiContainer = createGuiContainer(guiDomElement);
-    guiContainer.style.top = `${top}px`;
-
-    rootDomElement.appendChild(guiContainer);
   }
 
   _animate() {
@@ -61,8 +53,6 @@ function createCamera(width, height) {
     near,
     far,
   );
-  // Camera(2) for testing has following values:
-  // camera.position.set( 1225, 2113, 1814 );
   camera.position.set(-700, 500, -1600);
   return camera;
 }
@@ -77,12 +67,10 @@ function createRenderer(width, height) {
 function createOrbitControls(camera, domElement) {
   const controls = new OrbitControls(camera, domElement);
   controls.target.set(0, 600, 0);
-  // Camera(2) for testing has following values:
-  // controls.target.set(-1800,180,630);
   return controls;
 }
 
-function createScene(controller) {
+function createScene() {
   // SCENE
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0x808080, 3000, 6000);
@@ -98,55 +86,27 @@ function createScene(controller) {
   scene.add(light);
   scene.add(light2);
 
-  //   scene.add(camera);
-
-  //   if (ground) {
-  //     Coordinates.drawGround({ size: 1000 });
-  //   }
-  //   if (gridX) {
-  //     Coordinates.drawGrid({ size: 1000, scale: 0.01 });
-  //   }
-  //   if (gridY) {
-  //     Coordinates.drawGrid({ size: 1000, scale: 0.01, orientation: 'y' });
-  //   }
-  //   if (gridZ) {
-  //     Coordinates.drawGrid({ size: 1000, scale: 0.01, orientation: 'z' });
-  //   }
-  //   if (axes) {
-  //     Coordinates.drawAllAxes({ axisLength: 300, axisRadius: 2, axisTess: 50 });
-  //   }
   const [cyl1, cyl2] = createCup();
   scene.add(cyl1);
   scene.add(cyl2);
 
-  const [verticalStepMesh, horizontalStepMesh] = createStairs();
-  scene.add(verticalStepMesh);
-  scene.add(horizontalStepMesh);
+  const numberOfStairs = 6;
+  const stairwayMeshes = range(numberOfStairs).map(createStairs).flat();
+  stairwayMeshes.forEach((stairwayMesh) => {
+    scene.add(stairwayMesh);
+  });
 
-  const axesHelper = new THREE.AxesHelper(20);
-  scene.add(axesHelper);
+  const axes = new THREE.AxesHelper(1000);
+  scene.add(axes);
 
   return scene;
 }
 
-function createGuiContainer(guiDomElement) {
-  const autoPlaceContainer = window.document.createElement('div');
-  const datGuiCssNamespace = guiDomElement.classList[0];
-  autoPlaceContainer.classList.add(datGuiCssNamespace);
-  autoPlaceContainer.classList.add(GUI.CLASS_AUTO_PLACE_CONTAINER);
-  guiDomElement.classList.add(GUI.CLASS_AUTO_PLACE);
-  autoPlaceContainer.appendChild(guiDomElement);
-  return autoPlaceContainer;
+function range(n) {
+  return [...Array(n).keys()];
 }
 
-function createGUI(controller) {
-  const gui = new GUI({ autoPlace: false });
-  gui.closed = false;
-  //   gui.add(controller, 'sides', 3, 10, 1);
-  return gui;
-}
-
-function createStairs() {
+function createStairs(n) {
   // MATERIALS
   const stepMaterialVertical = new THREE.MeshLambertMaterial({
     color: 0xA85F35,
@@ -166,25 +126,32 @@ function createStairs() {
 
   // +Y direction is up
   // Define the two pieces of the step, vertical and horizontal
-  // THREE.CubeGeometry takes (width, height, depth)
+  // THREE.BoxGeometry takes (width, height, depth)
   const stepVertical = new THREE.BoxGeometry(stepWidth, verticalStepHeight, stepThickness);
   const stepHorizontal = new THREE.BoxGeometry(stepWidth, stepThickness, horizontalStepDepth);
+
+  // constant distance each step is moved up and forward
+  const riserHeigth = verticalStepHeight + stepThickness;
+  const riserDepth = horizontalStepDepth - stepThickness;
 
   // Make and position the vertical part of the step
   const verticalStepMesh = new THREE.Mesh(stepVertical, stepMaterialVertical);
   // The position is where the center of the block will be put.
   // You can define position as THREE.Vector3(x, y, z) or in the following way:
   verticalStepMesh.position.x = 0; // centered at origin
-  verticalStepMesh.position.y = verticalStepHeight / 2; // half of height: put it above ground plane
-  verticalStepMesh.position.z = 0; // centered at origin
+  verticalStepMesh.position.y = verticalStepHeight / 2
+  + (n * riserHeigth); // half of height: put it above ground plane
+  verticalStepMesh.position.z = n * riserDepth;
 
   // Make and position the horizontal part
   const horizontalStepMesh = new THREE.Mesh(stepHorizontal, stepMaterialHorizontal);
-  horizontalStepMesh.position.x = 0;
+  horizontalStepMesh.position.x = 0; // centered at origin
   // Push up by half of horizontal step's height, plus vertical step's height
-  horizontalStepMesh.position.y = stepThickness / 2 + verticalStepHeight;
+  horizontalStepMesh.position.y = stepThickness / 2 + verticalStepHeight
+  + (n * riserHeigth);
   // Push step forward by half the depth, minus half the vertical step's thickness
-  horizontalStepMesh.position.z = horizontalStepDepth / 2 - stepHalfThickness;
+  const zOffset = horizontalStepDepth / 2 - stepHalfThickness;
+  horizontalStepMesh.position.z = zOffset + (riserDepth * n);
   return [verticalStepMesh, horizontalStepMesh];
 }
 
