@@ -16,6 +16,7 @@ export default class DrawPolygon {
       sides: 5,
       cx: 0,
       cy: 0,
+      radius: 1,
     };
     this._scene = createScene(this._controller);
     this._renderer = createRenderer(width, height);
@@ -51,10 +52,12 @@ export default class DrawPolygon {
 
   _render() {
     if (!areObjectsDifferent(this._controller, this._previousController)) {
-      const { sides, cx, cy } = this._controller;
+      const {
+        sides, cx, cy, radius,
+      } = this._controller;
       const center = [cx, cy];
       const polygonMesh = this._scene.getObjectByName('polygon');
-      polygonMesh.geometry = drawPolygon(sides, center);
+      polygonMesh.geometry = drawPolygon(sides, center, radius);
     }
     this._previousController = { ...this._controller };
 
@@ -119,7 +122,9 @@ function createOrbitControls(camera, domElement) {
 }
 
 function createScene(controller) {
-  const { sides, cx, cy } = controller;
+  const {
+    sides, cx, cy, radius,
+  } = controller;
   const center = [cx, cy];
   const scene = new THREE.Scene();
   // LIGHTS
@@ -129,7 +134,7 @@ function createScene(controller) {
     color: 0xF6831E,
     side: THREE.DoubleSide,
   });
-  const polygonGeometry = drawPolygon(sides, center);
+  const polygonGeometry = drawPolygon(sides, center, radius);
   const polygonMesh = new THREE.Mesh(polygonGeometry, material);
   polygonMesh.name = 'polygon';
   scene.add(polygonMesh);
@@ -155,7 +160,7 @@ function createScene(controller) {
  * @param {number} sides number of sides
  * @returns {BufferGeometry} Square geometry.
  */
-function drawPolygon(sides, center = [0, 0], size = 1) {
+function drawPolygon(sides, center = [0, 0], radius = 1) {
   const [cx, cy] = center;
   const geometry = new THREE.BufferGeometry();
 
@@ -163,8 +168,8 @@ function drawPolygon(sides, center = [0, 0], size = 1) {
     // Add 90 degrees so we start at +Y axis, rotate counterclockwise around
     const angle = (Math.PI / 2) + (point / sides) * 2 * Math.PI;
 
-    const x = Math.cos(angle) * size;
-    const y = Math.sin(angle) * size;
+    const x = Math.cos(angle) * radius;
+    const y = Math.sin(angle) * radius;
     return [x + cx, y + cy, 0];
   });
 
@@ -202,5 +207,6 @@ function createGUI(controller) {
   gui.add(controller, 'sides', 3, 10, 1);
   gui.add(controller, 'cx', -10, 10, 1);
   gui.add(controller, 'cy', -10, 10, 1);
+  gui.add(controller, 'radius', 1, 5, 1);
   return gui;
 }
