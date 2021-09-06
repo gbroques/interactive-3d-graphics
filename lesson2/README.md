@@ -71,3 +71,13 @@ From greek word, "tesella" - meaning a small stone in a mosaic.
 A polygon with *N* edges, needs *N* - 2 triangles.
 
 ## Vertex Ordering and Culling
+
+**Backface Culling** - Only render faces visible to the viewer.
+
+**Purpose:** Speed up object display.
+
+How do we determine if a triagle is a front-face or back-face?
+
+**Vertex Ordering** - In WebGL, counter-clockwise vertices denote front-facing and clockwise vertices denote back-facing. According to the right-hand rule.
+
+Backface culling is on by default, in other words "side" for [Material](https://threejs.org/docs/?q=MeshBasicMaterial#api/en/materials/Material) is set to `THREE.FrontSide`.
