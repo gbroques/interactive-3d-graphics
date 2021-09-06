@@ -12,14 +12,18 @@ export default class DrawPolygon {
     } = options;
 
     this._camera = createCamera();
-    this._sidesController = { sides: 5 };
-    this._scene = createScene(this._sidesController.sides);
+    this._controller = {
+      sides: 5,
+      cx: 0,
+      cy: 0,
+    };
+    this._scene = createScene(this._controller);
     this._renderer = createRenderer(width, height);
     this._orbitControls = createOrbitControls(this._camera, this._renderer.domElement);
 
     this._animate();
 
-    const gui = createGUI(this._sidesController);
+    const gui = createGUI(this._controller);
     this._render();
     this._mount(rootDomElement, gui.domElement);
   }
@@ -46,14 +50,23 @@ export default class DrawPolygon {
   }
 
   _render() {
-    if (this._previousSides !== this._sidesController.sides) {
+    if (!areObjectsDifferent(this._controller, this._previousController)) {
+      const { sides, cx, cy } = this._controller;
+      const center = [cx, cy];
       const polygonMesh = this._scene.getObjectByName('polygon');
-      polygonMesh.geometry = drawPolygon(this._sidesController.sides, 10);
+      polygonMesh.geometry = drawPolygon(sides, center);
     }
-    this._previousSides = this._sidesController.sides;
+    this._previousController = { ...this._controller };
 
     this._renderer.render(this._scene, this._camera);
   }
+}
+
+function areObjectsDifferent(a, b = {}) {
+  return (
+    Object.keys(a).length !== Object.keys(b).length
+    && Object.keys(a).every((key) => a[key] !== b[key])
+  );
 }
 
 function createCamera() {
@@ -105,7 +118,9 @@ function createOrbitControls(camera, domElement) {
   return controls;
 }
 
-function createScene(sides) {
+function createScene(controller) {
+  const { sides, cx, cy } = controller;
+  const center = [cx, cy];
   const scene = new THREE.Scene();
   // LIGHTS
   scene.add(new THREE.AmbientLight(0x222222));
@@ -114,7 +129,7 @@ function createScene(sides) {
     color: 0xF6831E,
     side: THREE.DoubleSide,
   });
-  const polygonGeometry = drawPolygon(sides, 10);
+  const polygonGeometry = drawPolygon(sides, center);
   const polygonMesh = new THREE.Mesh(polygonGeometry, material);
   polygonMesh.name = 'polygon';
   scene.add(polygonMesh);
@@ -140,7 +155,8 @@ function createScene(sides) {
  * @param {number} sides number of sides
  * @returns {BufferGeometry} Square geometry.
  */
-function drawPolygon(sides, size = 1) {
+function drawPolygon(sides, center = [0, 0], size = 1) {
+  const [cx, cy] = center;
   const geometry = new THREE.BufferGeometry();
 
   const vertices = range(sides).map((point) => {
@@ -149,7 +165,7 @@ function drawPolygon(sides, size = 1) {
 
     const x = Math.cos(angle) * size;
     const y = Math.sin(angle) * size;
-    return [x, y, 0];
+    return [x + cx, y + cy, 0];
   });
 
   const mininumNumberOfTriangles = sides - 2;
@@ -180,9 +196,11 @@ function createGuiContainer(guiDomElement) {
   return autoPlaceContainer;
 }
 
-function createGUI(sidesController) {
+function createGUI(controller) {
   const gui = new GUI({ autoPlace: false });
   gui.closed = false;
-  gui.add(sidesController, 'sides', 3, 10, 1);
+  gui.add(controller, 'sides', 3, 10, 1);
+  gui.add(controller, 'cx', -10, 10, 1);
+  gui.add(controller, 'cy', -10, 10, 1);
   return gui;
 }
