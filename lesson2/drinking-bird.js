@@ -91,6 +91,8 @@ function createScene() {
     scene.add(mesh);
   });
 
+  scene.add(new THREE.AxesHelper(600));
+
   return scene;
 }
 
@@ -104,6 +106,7 @@ function createSupport() {
   base.position.x = -45; // (20+32) - half of width (20+64+110)/2
   base.position.y = 4 / 2; // half of height
   base.position.z = 0; // centered at origin
+  base.name = 'Base';
 
   // left foot
   const leftFoot = new THREE.Mesh(
@@ -112,6 +115,7 @@ function createSupport() {
   leftFoot.position.x = -45; // (20+32) - half of width (20+64+110)/2
   leftFoot.position.y = 52 / 2; // half of height
   leftFoot.position.z = 77 + 6 / 2; // offset 77 + half of depth 6/2
+  leftFoot.name = 'LeftFoot';
 
   // left leg
   const leftLeg = new THREE.Mesh(
@@ -120,15 +124,19 @@ function createSupport() {
   leftLeg.position.x = 0; // centered on origin along X
   leftLeg.position.y = (334 + 52) / 2;
   leftLeg.position.z = 77 + 6 / 2; // offset 77 + half of depth 6/2
+  leftLeg.name = 'LeftLeg';
 
-  // right foot
-
-  // right leg
-
+  const leftHalfMeshes = [leftFoot, leftLeg];
+  const rightHalfMeshes = leftHalfMeshes.map((leftHalfMesh) => {
+    const rightHalfMesh = leftHalfMesh.clone();
+    rightHalfMesh.name = leftHalfMesh.name.replace('Left', 'Right');
+    rightHalfMesh.position.z *= -1;
+    return rightHalfMesh;
+  });
   return [
     base,
-    leftFoot,
-    leftLeg,
+    ...leftHalfMeshes,
+    ...rightHalfMeshes,
   ];
 }
 
@@ -136,14 +144,71 @@ function createSupport() {
 function createBody() {
   const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xA00000 });
   const cylinderMaterial = new THREE.MeshLambertMaterial({ color: 0x0000D0 });
-  return [];
+
+  // spine
+  const spineHeight = 390;
+  const spineDiameter = 24;
+  const spineRadius = spineDiameter / 2;
+  const spine = new THREE.Mesh(
+    new THREE.CylinderGeometry(spineRadius, spineRadius, spineHeight, 32), cylinderMaterial,
+  );
+  const baseThickness = 4;
+  const spineYOffset = 160;
+  const spineY = (spineHeight / 2) + baseThickness + spineYOffset;
+  spine.position.y = spineY;
+  spine.name = 'Spine';
+
+  // body
+  const bodyDiameter = 116;
+  const bodyRadius = bodyDiameter / 2;
+  const body = new THREE.Mesh(
+    new THREE.SphereGeometry(bodyRadius, 32, 16), sphereMaterial,
+  );
+  body.name = 'Body';
+  body.position.y = spineYOffset;
+
+  return [spine, body];
 }
 
 // Head of the bird - head + hat
 function createHead() {
   const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xA00000 });
   const cylinderMaterial = new THREE.MeshLambertMaterial({ color: 0x0000D0 });
-  return [];
+
+  // head
+  const spineYOffset = 160;
+  const spineHeight = 390;
+  const headDiameter = 104;
+  const headRadius = headDiameter / 2;
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(headRadius, 32, 16), sphereMaterial,
+  );
+  head.name = 'Head';
+  const headY = spineYOffset + spineHeight;
+  head.position.y = headY;
+
+  // hat brim
+  const hatBrimDiameter = 142;
+  const hatBrimRadius = hatBrimDiameter / 2;
+  const hatBrimHeight = 10;
+  const hatBrim = new THREE.Mesh(
+    new THREE.CylinderGeometry(hatBrimRadius, hatBrimRadius, hatBrimHeight, 32), cylinderMaterial,
+  );
+  hatBrim.name = 'HatBrim';
+  const hatBrimYOffset = 40;
+  hatBrim.position.y = headY + hatBrimYOffset;
+
+  // hat body
+  const hatBodyDiameter = 80;
+  const hatBodyRadius = hatBodyDiameter / 2;
+  const hatBodyHeight = 70;
+  const hatBody = new THREE.Mesh(
+    new THREE.CylinderGeometry(hatBodyRadius, hatBodyRadius, hatBodyHeight, 32), cylinderMaterial,
+  );
+  hatBody.name = 'HatBody';
+  hatBody.position.y = headY + headRadius;
+
+  return [head, hatBrim, hatBody];
 }
 
 function createDrinkingBird() {
