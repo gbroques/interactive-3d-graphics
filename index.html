@@ -61,11 +61,12 @@
 <body>
     <header>
         Interactive 3D Graphics
-        <select onchange="onSelect(event)" name="" id="">
+        <select onchange="onSelect(event)">
             <option value=""></option>
             <option value="./lesson1/gold-cube.js">1: gold-cube.js</option>
             <option value="./lesson2/draw-square.js">2: draw-square.js</option>
             <option value="./lesson2/draw-polygon.js">2: draw-polygon.js</option>
+            <option value="./lesson2/stairway.js">2: stairway.js</option>
         </select>
     </header>
     <main>
@@ -115,7 +116,9 @@
         };
         window.addEventListener('resize', handleResize, false);
         return () => {
-            rootDomElement.removeChild(rootDomElement.lastElementChild);
+            while(rootDomElement.childElementCount > 1) {
+                rootDomElement.removeChild(rootDomElement.lastElementChild);
+            }
             window.removeEventListener('resize', handleResize);
 
             const cta = document.getElementById('call-to-action-container');
