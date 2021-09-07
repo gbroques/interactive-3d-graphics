@@ -43,6 +43,15 @@ Computer Graphics use *[Additive Color Mixing](https://en.wikipedia.org/wiki/Add
 
 ![Additive and Substractive Color](./img/additive-and-subtractive-colors.png)
 
+## RGB to Hexadecimal
+
+0x1280FF
+R = 1 * 16 + 2 = 18
+G = 8 * 16 + 0 = 128
+B = 15 * 16 + 15 = 255
+
+https://en.wikipedia.org/wiki/Hexadecimal
+
 ## Vertex Attributes & Color Interpolation
 Vertexes can have attributes like color, and Three.js will interpolate between vertexes.
 
@@ -255,3 +264,66 @@ Screen door transparency.
 Only supports two objects and only a 50/50 mix look good.
 
 ![Blending](./img/blending.png)
+
+## The Over Operator
+
+A more general way is to blend the filter's color with the color behind it.
+
+* **Destination** - Original object
+* **Source** - Transparent object
+
+![Source Destination Blending](./img/source-destination-blending.png)
+
+How to Blend Alpha and Source Color
+```
+C = (αₛ * cₛ) + (1 - αₛ) * cₑ
+```
+Where:
+- `αₛ` - Alpha of the source.
+- `cₛ` - Color of the source.
+- `cₑ` - Color of the destination.
+
+Called the "over" operator as it gives the effect of putting one color "*over*" another.
+
+When `αₛ = 0`:
+```
+C = cₑ
+```
+Fully transparent, color equal to destination.
+
+When `αₛ = 1`:
+```
+C = cₛ
+```
+Fully opaque, color equal to source.
+
+The equation performs *linear interpolation*.
+
+## Z-Buffer & Transparency
+
+* Draw all objects sorted back-to-front order.
+  * **Ineffecient**
+* Draw the fully opaque objects first, then transparent afterwards.
+  * Drawn in back-to-front order.
+
+
+## Transparency & Three.js
+1. Render all objects frist, z-buffer on.
+2. Turn on blending.
+   * Blending takes extra time for GPU to compute.
+3. Render transparent objects sorted back-to-front.
+
+Has many problems and **limitations**.
+
+For example, **interpenetration** (see [demo](http://www.realtimerendering.com/udacity/?load=demo/unit3-transparency.js)).
+
+## Advanced Transparency Methods
+
+*[Depth-peeling](https://en.wikipedia.org/wiki/Depth_peeling)* works well.
+
+![Depth-peeling](./img/depth-peeling.png)
+
+
+[*A-Buffer*](https://en.wikipedia.org/wiki/A-buffer) also solves transparency problems.
+
+![A-Buffer](./img/a-buffer.png)
