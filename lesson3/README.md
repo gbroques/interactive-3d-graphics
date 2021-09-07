@@ -59,3 +59,65 @@ CIE XYZ color space and device's color gamut.
 [Mach bands](https://en.wikipedia.org/wiki/Mach_bands) form lines creating the device's color gamut in the CIE XYZ color space.
 
 See [Gamut](https://en.wikipedia.org/wiki/Gamut) for more information.
+
+## Simple Light Model
+
+A material's appearance can be thought of by adding four components together:
+1. **Emissive** - For coloring glowing objects. A light bulb has some constant color and other objects don't really affect.
+2. **Ambient** - Compute a constant color value that is added to the fragment's final color. Adds some light or color to areas that are not well-lit or dark.
+3. **Diffuse** - flat-matte finish. Determined by each light's location.
+4. **Specular** - the shininess of an object. Affected by the viewer's location.
+
+#3 and #4 are computed based on lights in the scene while #1 and #2 are essentially independent of these.
+
+```
+Surface Color =
+Emissive +
+Ambient +
+For Each Light:
+    Diffuse(Light) + Specular(Light, View)
+```
+```
+C = E + A + Σ(D(L) + S(L, V))
+```
+
+## Light on a Diffuse Sphere
+
+![Light on a Diffuse Sphere](./light-on-a-diffuse-sphere.png)
+
+![Cosine Law](./light-on-a-diffuse-sphere-cosine-law.png)
+
+## Normalizing a Vector
+
+![Normalizing a Vector](./normalizing-a-vector.png)
+
+To shade a diffuse surface, we need:
+
+* the `cos` of the angle between the direction of the light and the surface normal.
+
+Shade = cos(θ)
+
+Dot Product - Vector operation that computes `cos` between `1` and `-1`.
+
+Normalize - Rescaling a vector to a length of `1`.
+
+Vector (3, -4, 0)
+
+```
+= sqrt(3^2 + (-4)^2 + 0^2)
+= sqrt(9 + 16 + 0)
+= sqrt(25)
+= 5
+```
+
+Normalized Vector
+= (3/5, -4/5, 0/5)
+= (0.6, -0.8, 0)
+
+Usually surface normals are stored as normalized vectors.
+
+![Example](./normalizing-a-vector-example.png)
+
+## Dot Product
+
+![Dot Product](./dot-product.png)
