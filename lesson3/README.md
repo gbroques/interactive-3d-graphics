@@ -133,3 +133,11 @@ C = Ambient + Color * Σ(N * Li)
 Where *N* is the surface normal, Li is each light source, and we take the dot product between them.
 
 In practice, *Emissive* is rarely used.
+
+## Shading Normals
+
+**Shading Normal** - make a tesselated surface look smooth.
+
+**Geometric Normal** - each triangle has geometric normals at it's surface.
+
+![Shading Normals](./img/shading-normals.png)

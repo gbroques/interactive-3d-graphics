@@ -74,17 +74,12 @@ function areObjectsDifferent(a, b = {}) {
 
 function createCamera() {
   const size = 30;
-  // Camera frustum left plane.
+  // Camera frustum planes
   const left = -size;
-  // Camera frustum right plane.
   const right = size;
-  // Camera frustum top plane.
   const top = size;
-  // Camera frustum bottom plane.
   const bottom = -size;
-  // Camera frustum near plane.
   const near = 0;
-  // Camera frustum far plane.
   const far = size * 2;
 
   const camera = new THREE.OrthographicCamera(
@@ -204,9 +199,13 @@ function createGuiContainer(guiDomElement) {
 function createGUI(controller) {
   const gui = new GUI({ autoPlace: false });
   gui.closed = false;
-  gui.add(controller, 'sides', 3, 10, 1);
-  gui.add(controller, 'cx', -10, 10, 1);
-  gui.add(controller, 'cy', -10, 10, 1);
-  gui.add(controller, 'radius', 1, 5, 1);
+  gui.add(controller, 'sides', 3, 10, 1)
+    .name('Sides');
+  gui.add(controller, 'cx', -10, 10, 1)
+    .name('Center X');
+  gui.add(controller, 'cy', -10, 10, 1)
+    .name('Center Y');
+  gui.add(controller, 'radius', 1, 5, 1)
+    .name('Radius');
   return gui;
 }

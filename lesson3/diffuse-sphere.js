@@ -1,6 +1,7 @@
 /* eslint-env browser */
 import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/controls/OrbitControls.js';
+import { GUI } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/libs/dat.gui.module';
 
 export default class DiffuseSphere {
   constructor(options) {
@@ -11,14 +12,18 @@ export default class DiffuseSphere {
     } = options;
 
     this._camera = createCamera(width, height);
-    this._scene = createScene();
+    this._controller = {
+      flatShading: false,
+    };
+    this._scene = createScene(this._controller);
     this._renderer = createRenderer(width, height);
     this._orbitControls = createOrbitControls(this._camera, this._renderer.domElement);
 
     this._animate();
 
+    const gui = createGUI(this._controller);
     this._render();
-    this._mount(rootDomElement);
+    this._mount(rootDomElement, gui.domElement);
   }
 
   resize(width, height) {
@@ -27,8 +32,13 @@ export default class DiffuseSphere {
     this._renderer.setSize(width, height);
   }
 
-  _mount(rootDomElement) {
+  _mount(rootDomElement, guiDomElement) {
+    const { top } = rootDomElement.getBoundingClientRect();
     rootDomElement.appendChild(this._renderer.domElement);
+    const guiContainer = createGuiContainer(guiDomElement);
+    guiContainer.style.top = `${top}px`;
+
+    rootDomElement.appendChild(guiContainer);
   }
 
   _animate() {
@@ -38,6 +48,12 @@ export default class DiffuseSphere {
   }
 
   _render() {
+    if (this._previousFlatShading !== this._controller.flatShading) {
+      const geometry = createSphereGeometry(this._controller.flatShading);
+      const sphere = this._scene.getObjectByName('Sphere');
+      sphere.geometry = geometry;
+    }
+    this._previousFlatShading = this._controller.flatShading;
     this._renderer.render(this._scene, this._camera);
   }
 }
@@ -62,18 +78,19 @@ function createOrbitControls(camera, domElement) {
   return controls;
 }
 
-function createScene() {
+function createScene(controller) {
   const scene = new THREE.Scene();
 
   // LIGHTS
-  const ambientLight = new THREE.AmbientLight(0xffffff);
+  // 0x666666 = 0xFFFFFF * 0.4
+  const ambientLight = new THREE.AmbientLight(0x666666);
   scene.add(ambientLight);
 
   const light = new THREE.DirectionalLight(0xffffff, 0.7);
   light.position.set(-800, 900, 300);
   scene.add(light);
 
-  const sphere = createSphere();
+  const sphere = createSphere(controller.flatShading);
   scene.add(sphere);
 
   const size = 1000;
@@ -85,11 +102,42 @@ function createScene() {
   return scene;
 }
 
-function createSphere() {
+function createSphere(flatShading) {
   const material = new THREE.MeshLambertMaterial({
     color: 0x80FC66,
   });
-
-  const sphere = new THREE.Mesh(new THREE.SphereGeometry(400, 64, 32), material);
+  const geometry = createSphereGeometry(flatShading);
+  const sphere = new THREE.Mesh(geometry, material);
+  sphere.name = 'Sphere';
   return sphere;
+}
+
+function createSphereGeometry(flatShading) {
+  let geometry = new THREE.SphereGeometry(400, 64, 32);
+  // https://github.com/mrdoob/three.js/issues/7130#issuecomment-770235574
+  // Convert geometry to "triangle soup".
+  if (flatShading) {
+    const nonIndexedGeometry = geometry.toNonIndexed();
+    nonIndexedGeometry.computeVertexNormals();
+    geometry = nonIndexedGeometry;
+  }
+  return geometry;
+}
+
+function createGuiContainer(guiDomElement) {
+  const autoPlaceContainer = window.document.createElement('div');
+  const datGuiCssNamespace = guiDomElement.classList[0];
+  autoPlaceContainer.classList.add(datGuiCssNamespace);
+  autoPlaceContainer.classList.add(GUI.CLASS_AUTO_PLACE_CONTAINER);
+  guiDomElement.classList.add(GUI.CLASS_AUTO_PLACE);
+  autoPlaceContainer.appendChild(guiDomElement);
+  return autoPlaceContainer;
+}
+
+function createGUI(controller) {
+  const gui = new GUI({ autoPlace: false });
+  gui.closed = false;
+  gui.add(controller, 'flatShading')
+    .name('Flat Shading');
+  return gui;
 }
