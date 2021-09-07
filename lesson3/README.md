@@ -200,3 +200,58 @@ Where:
 Smooth material on top, rough material on bottom.
 
 ![Half Angle Microfacets](./img/half-angle-micro-facets.png)
+
+## Gouraud Shading
+
+Compute lighting at vertices and interpolate between them.
+
+Not very good as are eyes perceive creases called *[mach bands](http://en.wikipedia.org/wiki/Mach_bands)*.
+
+To avoid this problem, we'd like to compute the lighting more frequently.
+
+One way to do this is to increase the number of triangles that make up the surface.
+
+"Gouraud interpolation" may be a better name. This matters mostly because there's Phong shading *and* Phong interpolation which are quite different things.
+
+![Gouraud Shading](./img/gouraud-shading.png)
+
+## Phong Interpolation
+Ideally, we want to evaluate the reflection model each pixel.
+
+Instead of interpolating the RGB values that result from computing the effects of lighting.
+
+All we need to compute is the *shading normal*.
+
+*Input* Position + Normal -> [Vertex Shader] -> *Output* Screen Position + Transformed Normal
+
+Vertex Normals are interpolated per-pixel.
+
+Interpolated normals are not normalized. Their length is a bit shorter than 1.
+
+This is called *Per-Pixel Shading* or *Phong Interpolation*.
+
+Compared to Gouraud Interpolation.
+
+Whether to interpolate between colors at vertices, or interpolate normals and then compute the shading per pixel.
+
+![Phong Interpolation](./img/phong-interpolation.png)
+
+Phong is more expensive, but needed for good specular highlight.
+
+Phong is 100 to 1 times more expensive than Gourad shading.
+
+## Transparency
+
+Transparent objects are more challenging.
+
+1. Light refracts, or changes direction when it hits a transparent surface.
+
+## Blending
+
+Simple way to think of transparency.
+
+Screen door transparency.
+
+Only supports two objects and only a 50/50 mix look good.
+
+![Blending](./img/blending.png)
