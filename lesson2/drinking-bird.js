@@ -73,14 +73,14 @@ function createOrbitControls(camera, domElement) {
 function createScene() {
   const scene = new THREE.Scene();
 
-  scene.fog = new THREE.Fog(0x808080, 3000, 6000);
+  scene.fog = new THREE.Fog(0x808080, 2000, 4000);
   // LIGHTS
   const ambientLight = new THREE.AmbientLight(0x222222);
-  const light = new THREE.DirectionalLight(0xffffff, 1.0);
-  light.position.set(200, 400, 500);
+  const light = new THREE.DirectionalLight(0xffffff, 0.7);
+  light.position.set(200, 500, 500);
 
-  const light2 = new THREE.DirectionalLight(0xffffff, 1.0);
-  light2.position.set(-400, 200, -300);
+  const light2 = new THREE.DirectionalLight(0xffffff, 0.7);
+  light2.position.set(-200, -100, -400);
 
   scene.add(ambientLight);
   scene.add(light);
@@ -98,20 +98,24 @@ function createScene() {
 
 // Supporting frame for the bird - base + legs + feet
 function createSupport() {
-  const baseMaterial = new THREE.MeshLambertMaterial({ color: 0xF07020 });
   const legMaterial = new THREE.MeshPhongMaterial({
-    color: 0xF07020,
+    color: 0xADA79B,
     shininess: 4,
     specular: new THREE.Color(0.5, 0.5, 0.5),
   });
   const footMaterial = new THREE.MeshPhongMaterial({
-    color: 0xF07020,
+    color: 0x960F0B,
     shininess: 30,
     specular: new THREE.Color(0.5, 0.5, 0.5),
   });
+
   // base
   const base = new THREE.Mesh(
-    new THREE.BoxGeometry(20 + 64 + 110, 4, 2 * 77), baseMaterial,
+    new THREE.BoxGeometry(
+      20 + 64 + 110,
+      4,
+      2 * 77,
+    ), footMaterial,
   );
   base.position.x = -45; // (20+32) - half of width (20+64+110)/2
   base.position.y = 4 / 2; // half of height
@@ -121,7 +125,11 @@ function createSupport() {
   // left foot
   const footHeight = 52;
   const leftFoot = new THREE.Mesh(
-    new THREE.BoxGeometry(20 + 64 + 110, footHeight, 6), legMaterial,
+    new THREE.BoxGeometry(
+      20 + 64 + 110,
+      footHeight,
+      6,
+    ), footMaterial,
   );
   const leftFootY = 52 / 2;
   leftFoot.position.x = -45; // (20+32) - half of width (20+64+110)/2
@@ -129,16 +137,32 @@ function createSupport() {
   leftFoot.position.z = 77 + 6 / 2; // offset 77 + half of depth 6/2
   leftFoot.name = 'LeftFoot';
 
+  const leftAnkle = new THREE.Mesh(
+    new THREE.BoxGeometry(
+      64,
+      104 - footHeight,
+      6,
+    ), footMaterial,
+  );
+  leftAnkle.position.x = 0; // centered on origin along X
+  leftAnkle.position.y = 104 / 2 + (footHeight / 2);
+  leftAnkle.position.z = 77 + 6 / 2; // negative offset 77 + half of depth 6/2
+  leftAnkle.name = 'LeftAnkle';
+
   // left leg
   const leftLeg = new THREE.Mesh(
-    new THREE.BoxGeometry(64, 334 + 52 - footHeight, 6), footMaterial,
+    new THREE.BoxGeometry(
+      60,
+      334 - footHeight,
+      6,
+    ), legMaterial,
   );
   leftLeg.position.x = 0; // centered on origin along X
-  leftLeg.position.y = (334 + 52) / 2 + (leftFootY);
+  leftLeg.position.y = 104 + (334 - footHeight) / 2;
   leftLeg.position.z = 77 + 6 / 2; // offset 77 + half of depth 6/2
   leftLeg.name = 'LeftLeg';
 
-  const leftHalfMeshes = [leftFoot, leftLeg];
+  const leftHalfMeshes = [leftFoot, leftAnkle, leftLeg];
   const rightHalfMeshes = leftHalfMeshes.map((leftHalfMesh) => {
     const rightHalfMesh = leftHalfMesh.clone();
     rightHalfMesh.name = leftHalfMesh.name.replace('Left', 'Right');
@@ -154,9 +178,8 @@ function createSupport() {
 
 // Body of the bird - body and the connector of body and head
 function createBody() {
-  const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xA00000 });
-  const cylinderMaterial = new THREE.MeshPhongMaterial({
-    color: 0x0000D0,
+  const bodyMaterial = new THREE.MeshPhongMaterial({
+    color: 0x1F56A9,
     shininess: 100,
     specular: new THREE.Color(0.5, 0.5, 0.5),
   });
@@ -166,7 +189,7 @@ function createBody() {
   const spineDiameter = 24;
   const spineRadius = spineDiameter / 2;
   const spine = new THREE.Mesh(
-    new THREE.CylinderGeometry(spineRadius, spineRadius, spineHeight, 32), cylinderMaterial,
+    new THREE.CylinderGeometry(spineRadius, spineRadius, spineHeight, 32), bodyMaterial,
   );
   const baseThickness = 4;
   const spineYOffset = 160;
@@ -178,7 +201,7 @@ function createBody() {
   const bodyDiameter = 116;
   const bodyRadius = bodyDiameter / 2;
   const body = new THREE.Mesh(
-    new THREE.SphereGeometry(bodyRadius, 32, 16), sphereMaterial,
+    new THREE.SphereGeometry(bodyRadius, 32, 16), bodyMaterial,
   );
   body.name = 'Body';
   body.position.y = spineYOffset;
@@ -188,9 +211,11 @@ function createBody() {
 
 // Head of the bird - head + hat
 function createHead() {
-  const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xA00000 });
-  const cylinderMaterial = new THREE.MeshPhongMaterial({
-    color: 0x0000D0,
+  const headMaterial = new THREE.MeshLambertMaterial({
+    color: 0x680105,
+  });
+  const hatMaterial = new THREE.MeshPhongMaterial({
+    color: 0x18264D,
     shininess: 100,
     specular: new THREE.Color(0.5, 0.5, 0.5),
   });
@@ -201,7 +226,7 @@ function createHead() {
   const headDiameter = 104;
   const headRadius = headDiameter / 2;
   const head = new THREE.Mesh(
-    new THREE.SphereGeometry(headRadius, 32, 16), sphereMaterial,
+    new THREE.SphereGeometry(headRadius, 32, 16), headMaterial,
   );
   head.name = 'Head';
   const headY = spineYOffset + spineHeight;
@@ -212,7 +237,7 @@ function createHead() {
   const hatBrimRadius = hatBrimDiameter / 2;
   const hatBrimHeight = 10;
   const hatBrim = new THREE.Mesh(
-    new THREE.CylinderGeometry(hatBrimRadius, hatBrimRadius, hatBrimHeight, 32), cylinderMaterial,
+    new THREE.CylinderGeometry(hatBrimRadius, hatBrimRadius, hatBrimHeight, 32), hatMaterial,
   );
   hatBrim.name = 'HatBrim';
   const hatBrimYOffset = 40;
@@ -223,7 +248,7 @@ function createHead() {
   const hatBodyRadius = hatBodyDiameter / 2;
   const hatBodyHeight = 70;
   const hatBody = new THREE.Mesh(
-    new THREE.CylinderGeometry(hatBodyRadius, hatBodyRadius, hatBodyHeight, 32), cylinderMaterial,
+    new THREE.CylinderGeometry(hatBodyRadius, hatBodyRadius, hatBodyHeight, 32), hatMaterial,
   );
   hatBody.name = 'HatBody';
   hatBody.position.y = headY + headRadius;
