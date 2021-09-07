@@ -98,10 +98,20 @@ function createScene() {
 
 // Supporting frame for the bird - base + legs + feet
 function createSupport() {
-  const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xF07020 });
+  const baseMaterial = new THREE.MeshLambertMaterial({ color: 0xF07020 });
+  const legMaterial = new THREE.MeshPhongMaterial({
+    color: 0xF07020,
+    shininess: 4,
+    specular: new THREE.Color(0.5, 0.5, 0.5),
+  });
+  const footMaterial = new THREE.MeshPhongMaterial({
+    color: 0xF07020,
+    shininess: 30,
+    specular: new THREE.Color(0.5, 0.5, 0.5),
+  });
   // base
   const base = new THREE.Mesh(
-    new THREE.BoxGeometry(20 + 64 + 110, 4, 2 * 77), cubeMaterial,
+    new THREE.BoxGeometry(20 + 64 + 110, 4, 2 * 77), baseMaterial,
   );
   base.position.x = -45; // (20+32) - half of width (20+64+110)/2
   base.position.y = 4 / 2; // half of height
@@ -110,7 +120,7 @@ function createSupport() {
 
   // left foot
   const leftFoot = new THREE.Mesh(
-    new THREE.BoxGeometry(20 + 64 + 110, 52, 6), cubeMaterial,
+    new THREE.BoxGeometry(20 + 64 + 110, 52, 6), legMaterial,
   );
   leftFoot.position.x = -45; // (20+32) - half of width (20+64+110)/2
   leftFoot.position.y = 52 / 2; // half of height
@@ -119,7 +129,7 @@ function createSupport() {
 
   // left leg
   const leftLeg = new THREE.Mesh(
-    new THREE.BoxGeometry(64, 334 + 52, 6), cubeMaterial,
+    new THREE.BoxGeometry(64, 334 + 52, 6), footMaterial,
   );
   leftLeg.position.x = 0; // centered on origin along X
   leftLeg.position.y = (334 + 52) / 2;
@@ -143,7 +153,11 @@ function createSupport() {
 // Body of the bird - body and the connector of body and head
 function createBody() {
   const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xA00000 });
-  const cylinderMaterial = new THREE.MeshLambertMaterial({ color: 0x0000D0 });
+  const cylinderMaterial = new THREE.MeshPhongMaterial({
+    color: 0x0000D0,
+    shininess: 100,
+    specular: new THREE.Color(0.5, 0.5, 0.5),
+  });
 
   // spine
   const spineHeight = 390;
@@ -173,7 +187,11 @@ function createBody() {
 // Head of the bird - head + hat
 function createHead() {
   const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xA00000 });
-  const cylinderMaterial = new THREE.MeshLambertMaterial({ color: 0x0000D0 });
+  const cylinderMaterial = new THREE.MeshPhongMaterial({
+    color: 0x0000D0,
+    shininess: 100,
+    specular: new THREE.Color(0.5, 0.5, 0.5),
+  });
 
   // head
   const spineYOffset = 160;
