@@ -141,3 +141,62 @@ In practice, *Emissive* is rarely used.
 **Geometric Normal** - each triangle has geometric normals at it's surface.
 
 ![Shading Normals](./img/shading-normals.png)
+
+## Ka, Kd, and HSL
+
+```
+Fragment Color = Ka * Material + Kd * material * (N * Li)
+```
+
+Where:
+
+* `Kd` is a scalar modifying the ***d**iffuse* cotribution.
+* `Ka` is a scalar modifying the ***a**mbient* contrubution.
+* `(N * L)` is a dot product of the normals and light sources.
+
+**DEMO:** http://www.realtimerendering.com/udacity/?load=demo/unit3-lambert-demo.js
+
+
+## Baking
+
+To save on light calculations, if an object's orientation and all light's directions do not change, then you can pre-compute an RGB value for each pixel.
+
+The eye or view does not affect the diffuse calculation.
+
+## Specular Materials
+
+Nearly diffuse:
+
+* rough wood
+* newspaper
+* concrete
+* mouse pad
+
+Specular Materials (shiny or glossy):
+* polished metals
+* plastics
+* polished wood
+* glass
+* glazed ceramics
+* enamel paint
+
+These materials look different when you view them from different angles.
+
+Thus, we need to take into account the direction from the surface to the eye.
+
+Simplified and Most Common Blinn-Phong Reflection Model
+```
+Specular = Max(N * H, 0)^s
+```
+Where:
+* `N` - surface normals
+* `H` - half angle factor (half way between light and eye)
+* `s` - shininess factor (the greater the value, the more shiny the material) (`1` - `infinity`)
+
+![Specular Material Equation](./img/specular-material-equation.png)
+
+![Light Effect Graph](./img/light-effect-graph.png)
+
+Smooth material on top, rough material on bottom.
+
+![Half Angle Microfacets](./img/half-angle-micro-facets.png)
