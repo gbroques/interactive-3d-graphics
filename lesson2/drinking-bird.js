@@ -119,20 +119,22 @@ function createSupport() {
   base.name = 'Base';
 
   // left foot
+  const footHeight = 52;
   const leftFoot = new THREE.Mesh(
-    new THREE.BoxGeometry(20 + 64 + 110, 52, 6), legMaterial,
+    new THREE.BoxGeometry(20 + 64 + 110, footHeight, 6), legMaterial,
   );
+  const leftFootY = 52 / 2;
   leftFoot.position.x = -45; // (20+32) - half of width (20+64+110)/2
-  leftFoot.position.y = 52 / 2; // half of height
+  leftFoot.position.y = leftFootY; // half of height
   leftFoot.position.z = 77 + 6 / 2; // offset 77 + half of depth 6/2
   leftFoot.name = 'LeftFoot';
 
   // left leg
   const leftLeg = new THREE.Mesh(
-    new THREE.BoxGeometry(64, 334 + 52, 6), footMaterial,
+    new THREE.BoxGeometry(64, 334 + 52 - footHeight, 6), footMaterial,
   );
   leftLeg.position.x = 0; // centered on origin along X
-  leftLeg.position.y = (334 + 52) / 2;
+  leftLeg.position.y = (334 + 52) / 2 + (leftFootY);
   leftLeg.position.z = 77 + 6 / 2; // offset 77 + half of depth 6/2
   leftLeg.name = 'LeftLeg';
 
