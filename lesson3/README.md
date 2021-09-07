@@ -42,3 +42,20 @@ Print or paints use *[Subtractive Color Mixing](https://en.wikipedia.org/wiki/Su
 Computer Graphics use *[Additive Color Mixing](https://en.wikipedia.org/wiki/Additive_color)* or [RGB](https://en.wikipedia.org/wiki/RGB_color_model).
 
 ![Additive and Substractive Color](./additive-and-subtractive-colors.png)
+
+## Vertex Attributes & Color Interpolation
+Vertexes can have attributes like color, and Three.js will interpolate between vertexes.
+
+This interpolation affects other attributes in addition to color.
+
+## Color Gamut
+
+Monitors have limits on the colors they can produce, and produce only a subset of the visible light spectrum.
+
+![Gamut](./gamut.png)
+
+CIE XYZ color space and device's color gamut.
+
+[Mach bands](https://en.wikipedia.org/wiki/Mach_bands) form lines creating the device's color gamut in the CIE XYZ color space.
+
+See [Gamut](https://en.wikipedia.org/wiki/Gamut) for more information.
