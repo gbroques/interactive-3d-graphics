@@ -121,3 +121,15 @@ Usually surface normals are stored as normalized vectors.
 ## Dot Product
 
 ![Dot Product](./dot-product.png)
+
+## Diffuse Material
+
+`MeshBasicMaterial` is a solid color not affected by the lighting.
+
+`MeshLambertMaterial`
+```
+C = Ambient + Color * Σ(N * Li)
+```
+Where *N* is the surface normal, Li is each light source, and we take the dot product between them.
+
+In practice, *Emissive* is rarely used.
