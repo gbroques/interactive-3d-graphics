@@ -41,7 +41,7 @@ Print or paints use *[Subtractive Color Mixing](https://en.wikipedia.org/wiki/Su
 
 Computer Graphics use *[Additive Color Mixing](https://en.wikipedia.org/wiki/Additive_color)* or [RGB](https://en.wikipedia.org/wiki/RGB_color_model).
 
-![Additive and Substractive Color](./additive-and-subtractive-colors.png)
+![Additive and Substractive Color](./img/additive-and-subtractive-colors.png)
 
 ## Vertex Attributes & Color Interpolation
 Vertexes can have attributes like color, and Three.js will interpolate between vertexes.
@@ -52,7 +52,7 @@ This interpolation affects other attributes in addition to color.
 
 Monitors have limits on the colors they can produce, and produce only a subset of the visible light spectrum.
 
-![Gamut](./gamut.png)
+![Gamut](./img/gamut.png)
 
 CIE XYZ color space and device's color gamut.
 
@@ -83,13 +83,13 @@ C = E + A + Σ(D(L) + S(L, V))
 
 ## Light on a Diffuse Sphere
 
-![Light on a Diffuse Sphere](./light-on-a-diffuse-sphere.png)
+![Light on a Diffuse Sphere](./img/light-on-a-diffuse-sphere.png)
 
-![Cosine Law](./light-on-a-diffuse-sphere-cosine-law.png)
+![Cosine Law](./img/light-on-a-diffuse-sphere-cosine-law.png)
 
 ## Normalizing a Vector
 
-![Normalizing a Vector](./normalizing-a-vector.png)
+![Normalizing a Vector](./img/normalizing-a-vector.png)
 
 To shade a diffuse surface, we need:
 
@@ -116,11 +116,11 @@ Normalized Vector
 
 Usually surface normals are stored as normalized vectors.
 
-![Example](./normalizing-a-vector-example.png)
+![Example](./img/normalizing-a-vector-example.png)
 
 ## Dot Product
 
-![Dot Product](./dot-product.png)
+![Dot Product](./img/dot-product.png)
 
 ## Diffuse Material
 
