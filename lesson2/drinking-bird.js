@@ -184,29 +184,65 @@ function createBody() {
     specular: new THREE.Color(0.5, 0.5, 0.5),
   });
 
-  // spine
-  const spineHeight = 390;
-  const spineDiameter = 24;
-  const spineRadius = spineDiameter / 2;
-  const spine = new THREE.Mesh(
-    new THREE.CylinderGeometry(spineRadius, spineRadius, spineHeight, 32), bodyMaterial,
-  );
-  const baseThickness = 4;
-  const spineYOffset = 160;
-  const spineY = (spineHeight / 2) + baseThickness + spineYOffset;
-  spine.position.y = spineY;
-  spine.name = 'Spine';
+  const glassMaterial = new THREE.MeshPhongMaterial({
+    color: 0x000000,
+    shininess: 100,
+    specular: 0xFFFFFF,
+    opacity: 0.30,
+    transparent: true,
+  });
 
   // body
-  const bodyDiameter = 116;
-  const bodyRadius = bodyDiameter / 2;
   const body = new THREE.Mesh(
-    new THREE.SphereGeometry(bodyRadius, 32, 16), bodyMaterial,
+    new THREE.SphereGeometry(104 / 2, 32, 16, 0, Math.PI * 2, Math.PI / 2, Math.PI), bodyMaterial,
   );
+  body.position.x = 0;
+  body.position.y = 160;
+  body.position.z = 0;
   body.name = 'Body';
-  body.position.y = spineYOffset;
 
-  return [spine, body];
+  // cap for top of hemisphere
+  const bodyCap = new THREE.Mesh(
+    new THREE.CylinderGeometry(104 / 2, 104 / 2, 0, 32), bodyMaterial,
+  );
+  bodyCap.position.x = 0;
+  bodyCap.position.y = 160;
+  bodyCap.position.z = 0;
+  bodyCap.name = 'BodyCap';
+
+  // spine
+  const spine = new THREE.Mesh(
+    new THREE.CylinderGeometry(12 / 2, 12 / 2, 390 - 100, 32), bodyMaterial,
+  );
+  spine.position.x = 0;
+  spine.position.y = 160 + 390 / 2 - 100;
+  spine.position.z = 0;
+  spine.name = 'Spine';
+
+  // glass stem
+  const glassBody = new THREE.Mesh(
+    new THREE.SphereGeometry(116 / 2, 32, 16), glassMaterial,
+  );
+  glassBody.position.x = 0;
+  glassBody.position.y = 160;
+  glassBody.position.z = 0;
+  glassBody.name = 'GlassBody';
+
+  const glassSpine = new THREE.Mesh(
+    new THREE.CylinderGeometry(24 / 2, 24 / 2, 390, 32), glassMaterial,
+  );
+  glassSpine.position.x = 0;
+  glassSpine.position.y = 160 + 390 / 2;
+  glassSpine.position.z = 0;
+  glassSpine.name = 'GlassSpine';
+
+  return [
+    body,
+    bodyCap,
+    spine,
+    glassBody,
+    glassSpine,
+  ];
 }
 
 // Head of the bird - head + hat
