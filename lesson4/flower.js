@@ -103,21 +103,25 @@ function createScene() {
 
   const petalGroup = new THREE.Object3D();
   petalGroup.name = 'Petals';
-  petalGroup.position.y = flowerHeight;
   flower.add(petalGroup);
 
   const numberOfPetals = 24;
   const petals = range(numberOfPetals).map((n) => {
     const cone = new THREE.Mesh(cylinderGeometry, petalMaterial);
-    cone.position.z = petalLength / 2;
-    cone.rotation.x = THREE.MathUtils.degToRad(90);
+    cone.scale.x = 0.25;
+    cone.position.y = petalLength / 2;
     cone.name = 'Cone';
 
     const petal = new THREE.Object3D();
     petal.name = `Petal${n}`;
     const angle = (360 / numberOfPetals) * n;
     petal.rotation.y = THREE.MathUtils.degToRad(angle);
+    const tiltAngle = 20;
+    petal.rotation.z = THREE.MathUtils.degToRad(90 - tiltAngle);
+    petal.position.y = flowerHeight;
+
     petal.add(cone);
+
     return petal;
   });
 
