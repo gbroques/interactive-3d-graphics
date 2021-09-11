@@ -20,18 +20,28 @@ export default class RobotArm {
 
       forearmY: 10.0,
       forearmZ: 60.0,
+
+      handZ: 30.0,
+      handSpread: 12.0,
     };
 
     const bodyLength = 60;
     const upperArmLength = 120;
+    const forearmLength = 80;
+    const [rightHand, leftHand] = createHands(forearmLength);
     this._robot = {
       base: createBase(),
       body: createBody(bodyLength),
       upperArm: createUpperArm(upperArmLength, bodyLength),
-      forearm: createForearm(upperArmLength),
+      forearm: createForearm(forearmLength, upperArmLength),
+      rightHand,
+      leftHand,
     };
-    this._robot.upperArm.add(this._robot.forearm);
     this._robot.body.add(this._robot.upperArm);
+    this._robot.upperArm.add(this._robot.forearm);
+    this._robot.forearm.add(this._robot.rightHand);
+    this._robot.forearm.add(this._robot.leftHand);
+
     const robotGroup = new THREE.Group();
     robotGroup.name = 'Robot';
     robotGroup.add(this._robot.base);
@@ -87,6 +97,12 @@ export default class RobotArm {
 
     this._robot.forearm.rotation.y = this._controller.forearmY * (Math.PI / 180);
     this._robot.forearm.rotation.z = this._controller.forearmZ * (Math.PI / 180);
+
+    this._robot.leftHand.rotation.z = this._controller.handZ * (Math.PI / 180);
+    this._robot.leftHand.position.z = this._controller.handSpread;
+
+    this._robot.rightHand.rotation.z = this._controller.handZ * (Math.PI / 180);
+    this._robot.rightHand.position.z = -this._controller.handSpread;
 
     this._renderer.render(this._scene, this._camera);
   }
@@ -154,15 +170,15 @@ function createGUI(controller) {
     .name('Forearm Y');
   gui.add(controller, 'forearmZ', -120.0, 120.0, 0.025)
     .name('Forearm Z');
-
+  gui.add(controller, 'handZ', -45.0, 45.0, 0.025).name('Hand Z');
+  gui.add(controller, 'handSpread', 2.0, 17.0, 0.025).name('Hand Spread');
   return gui;
 }
 
-function createForearm(y) {
+function createForearm(length, y) {
   const forearm = new THREE.Object3D();
   forearm.name = 'Forearm';
   forearm.position.y = y;
-  const length = 80;
   const material = new THREE.MeshPhongMaterial({
     color: 0xF4C154,
     specular: 0xF4C154,
@@ -273,4 +289,38 @@ function createBody(length) {
   body.add(sphere);
 
   return body;
+}
+
+function createHands(y) {
+  const length = 38;
+  const geometry = new THREE.BoxGeometry(30, length, 4);
+
+  const rightHandMaterial = new THREE.MeshPhongMaterial({
+    color: 0xDD3388,
+    specular: 0xDD3388,
+    shininess: 20,
+  });
+  const rightHand = createHand(geometry, rightHandMaterial, y, length);
+
+  const leftHandMaterial = new THREE.MeshPhongMaterial({
+    color: 0xCC3399,
+    specular: 0xCC3399,
+    shininess: 20,
+  });
+  const leftHand = createHand(geometry, leftHandMaterial, y, length);
+
+  return [rightHand, leftHand];
+}
+
+function createHand(geometry, material, y, length) {
+  const hand = new THREE.Object3D();
+  // Move the hand part to the end of the forearm.
+  hand.position.y = y;
+
+  const box = new THREE.Mesh(
+    geometry, material,
+  );
+  box.position.y = length / 2;
+  hand.add(box);
+  return hand;
 }
