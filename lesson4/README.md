@@ -59,4 +59,67 @@ Scaling is *not* a "rigid body" transform.
 
 As opposed to **Non-uniform Scaling** - the opposite.
 
-sphere.scale.x
+## Scale Rotate Translate
+
+**Order matters** for:
+
+1. Rotation
+2. and Scaling
+
+but not Translation.
+
+Three.js applies these operations in the following order:
+
+1. Scale
+2. Rotate
+3. Translate
+
+## Three.js Editor
+
+The three.js interactive scene editor:
+https://threejs.org/editor/
+
+## Chaging Order of Operations
+
+You can create a new `Object3D` to change the order of scale, rotate, translate.
+
+```js
+const block = new THREE.Mesh(
+  new THREE.CubeGeometry(100, 4, 4), material
+);
+// translate first
+block.position.x = 40;
+
+const clockHand = new THREE.Object3D();
+clockHand.add(block);
+
+// and rotate after
+clockHand.rotaion.y = -70 * Math.PI / 180;
+
+scene.add(clockHand);
+```
+
+Right to left.
+```
+T R S O
+<------
+```
+"Trash", "Trees".
+
+Where:
+
+* `O` - Object
+* `S` - Scale
+* `R` - Rotate
+* `T` - Transform
+
+## Hierarchy of Objects
+
+`Object3D` creates a parent-child relationshipt between 2 objects.
+
+Once an object is a child of another object, that child is affected by whatever is done to the parent.
+
+## Instancing
+A set of triangles or geometry can be re-used again and again.
+
+This reduces memory and can increase GPU performance.
