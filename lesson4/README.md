@@ -85,7 +85,7 @@ You can create a new `Object3D` to change the order of scale, rotate, translate.
 
 ```js
 const block = new THREE.Mesh(
-  new THREE.CubeGeometry(100, 4, 4), material
+  new THREE.BoxGeometry(100, 4, 4), material
 );
 // translate first
 block.position.x = 40;
@@ -118,6 +118,8 @@ Where:
 `Object3D` creates a parent-child relationshipt between 2 objects.
 
 Once an object is a child of another object, that child is affected by whatever is done to the parent.
+
+Order of operations is child to parent (i.e. child operations are applied first, and then parent operations are applied).
 
 ## Instancing
 A set of triangles or geometry can be re-used again and again.
