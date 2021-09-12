@@ -38,9 +38,13 @@ Like an identity matrix, but translation movement is in the top 3 positions of t
 0 0 1 Tz
 0 0 0 1
 ```
-In **Column-Major Form**.
+In [**Column-Major Form**](https://en.wikipedia.org/wiki/Row-_and_column-major_order).
 
 There is also *row-major form*.
+
+> In computing, row-major order and column-major order are methods for storing multidimensional arrays in linear storage such as random access memory.
+>
+> -- Wikipedia
 
 WebGL and most publications use Column-Major form.
 
@@ -48,6 +52,8 @@ In memory:
 ```
 1 0 0 0 0 1 0 0 0 0 1 0 Tx Ty Tz 1
 ```
+
+![Row and Column Major Order](./img/Row_and_column_major_order.svg)
 
 (*same in WebGL & DirectX*)
 
