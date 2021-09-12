@@ -389,3 +389,13 @@ Right-most column, or fourth column is for **translations**.
 As opposed to *projective transform* (bottom fourth row). Fourth coordinate is modified to something other than 1.
 
 ![Matrix Zones](./img/matrix-zones.png)
+
+## Summary
+
+* Three.js and WebGL uses [column-major order](https://en.wikipedia.org/wiki/Row-_and_column-major_order) for matrices.
+* Matrix operations are applied right-to-left.
+  * Frame of reference is applied left-to-right.
+* Matrix operations are **associative**.
+  * (TR)S = T(RS)
+* Matrix operations are *not* **commutative** (*usually*).
+  * TR != RT
