@@ -87,6 +87,7 @@
     let cleanUp = null;
     function onSelect(event) {
         const src = event.target.value;
+        localStorage.setItem('demoSrc', src);
         if (cleanUp) {
             cleanUp();
             cleanUp = null;
@@ -96,6 +97,14 @@
                 cleanUp = cleanUpFunction;
             });
         }
+    }
+
+    const demoSrc = localStorage.getItem('demoSrc');
+    if (demoSrc) {
+        const select = document.getElementsByTagName('select')[0];
+        select.value = demoSrc;
+        const selectEvent = {target: {value: demoSrc}};
+        onSelect(selectEvent);
     }
 
     function loadScript(src) {
