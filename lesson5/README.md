@@ -171,3 +171,221 @@ New computed vector:
 * describes the axis of rotation between the two vectors
 * is perpendicular to both vectors
 * typically want to normalize this vector if you use it late as it's length is usually obscure
+
+## Rotation Times Rotation
+
+```
+T Rx Ry Rz S O
+<-------------
+```
+`Object3D.matrix` is the above matrices concatenated together.
+
+## World Matrix
+World matrix or model matrix.
+
+This includeds the child object's matrix multiplied by it's parent matrices.
+
+```
+Mc * Mw * Mh
+```
+
+* `Mc` - Matrix of car
+* `Mw` - Matrix of wheel
+* `Mh` - Matrix of hub
+
+## Frames
+Intead of transforming the object, another way to think about it is you change the frame of reference for the object.
+
+The first matrix to the right of some given set of matrices is transforming the object with respect to that set (e.g. everything to the left of it).
+
+![frames](./img/frames.png)
+
+* `TR` - Translation happens with respect to the world. Rotation happens with respect to a new translated frame of reference.
+* `RT` - Rotation happens with respect to the world. Translation happens with respect to a new rotated frame of reference.
+
+Typlically matrix operations are read right-to-left,bu the above is the left-to-right interpretation.
+
+See:
+http://www.realtimerendering.com/blog/two-ways-to-think-about-transforms/
+
+## Scale Matrix & Normal
+
+Scaling Matrix:
+```
+Sx  0  0  0
+ 0 Sy  0  0
+ 0  0 Sz  0
+ 0  0  0  1
+```
+
+Scaling can mess up normals used in shading.
+
+Translation and rotation don't mess up normals.
+
+* Uniform Scaling
+    * Re-normalize normals before using it in lighting equations
+* Non-uniform Scaling
+    * Skews normals
+    * Invert and transpose a matrix
+
+## Transpose
+
+M
+```
+A E I M
+B F J N
+C G K O
+D H L 1
+```
+
+Transpose(M)
+```
+A B C D
+E F G H
+I J K L
+M N O 1
+```
+
+## Inverse
+
+### Definition
+The inverse of a matrix essentially "undoes" the work of that matrix.
+
+```
+M * M^-1 = I
+```
+
+Where:
+
+* M - Matrix
+* M^-1 - Inverse of Matrix `M`
+* I - Identity Matrix
+
+### Translation
+Translation Matrix
+```
+1 0 0 Tx
+0 1 0 Ty
+0 0 1 Tz
+0 0 0 1
+```
+
+Inverse (negate Tx, Ty, and Tz)
+```
+1 0 0 -Tx
+0 1 0 -Ty
+0 0 1 -Tz
+0 0 0 1
+```
+
+### Rotation (Rz)
+
+Rotation Matrix (Rz)
+```
+  cos(θ) -sin(θ)       0       0
+  sin(θ)  cos(θ)       0       0
+  0       0            1       0
+  0       0            0       1
+```
+
+Inverse (transpose)
+```
+ cos(θ)  sin(θ)       0       0
+-sin(θ)  cos(θ)       0       0
+  0      0            1       0
+  0      0            0       1
+```
+
+### Scale
+
+Rotation Matrix (Rz)
+```
+Sx  0  0  0
+ 0 Sy  0  0
+ 0  0 Sz  0
+ 0  0  0  1
+```
+
+Inverse ([multiplicative inverse](https://en.wikipedia.org/wiki/Multiplicative_inverse))
+```
+1/Sx    0    0    0
+   0 1/Sy    0    0
+   0    0 1/Sz    0
+   0    0    0    1
+```
+
+
+### Three.js
+```js
+matrix.invert();
+```
+https://threejs.org/docs/#api/en/math/Matrix4.invert
+
+## How to Correct Non-Uniformally Scaled Shading Normals
+
+Transpose of the inverse **OR** Inverse of the Transpose.
+
+* **Translation** - Doesn't affect vectors.
+* **Rotation** - Transpose is the inverse. Two transposes results in the same rotation matrix. No effect.
+* **Scale**
+  * If uniform, re-normalize the normals.
+  * If non-uniform, compute the transpose of the inverse (or inverse of the transpose). (*costly to compute all the time*)
+
+## Mirroring (Reflection)
+
+Mirror Matrix
+```
+Mx  0  0  0
+ 0 My  0  0
+ 0  0 Mz  0
+ 0  0  0  1
+```
+Where one of `Mx`, `My`, `Mz` is -1, and the others are `1`.
+
+Mirror about z-axis.
+```
+ 1  0  0  0
+ 0  1  0  0
+ 0  0 -1  0
+ 0  0  0  1
+```
+```js
+object3d.scale.z = -1;
+```
+
+Caveats:
+* Flips from right-hand to left-hand system
+* Backface culling - you may have to reverse from `THREE.FrontSide` to `THREE.BackSide`.
+* Also affects lighting -- making it look like lights come from the opposite direction.
+
+How to determine if it's a mirror?
+
+```js
+if (matrix.determinant() < 0) {
+    // mirror!
+}
+```
+
+## Matrix Zones
+```
+N11 N21 N31 N41
+N12 N22 N32 N42
+N13 N23 N33 N43
+0     0   0   1
+```
+Upper left, 3x3 matrix is for **linear transforms**:
+* Rotations
+* and Scales
+
+Right-most column, or fourth column is for **translations**.
+
+[Matrix4.decompose](https://threejs.org/docs/#api/en/math/Matrix4.decompose) can be used to extract position, rotation and scale all at once.
+
+* Position and scale come back as vectors
+* Rotation comes back as a quaternion.
+
+**Affine Transforms** - Parallel lines stay parallel when an affine transformation is applied (top 3 rows).
+
+As opposed to *projective transform* (bottom fourth row). Fourth coordinate is modified to something other than 1.
+
+![Matrix Zones](./img/matrix-zones.png)
