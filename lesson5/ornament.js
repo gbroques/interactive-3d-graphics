@@ -93,31 +93,32 @@ function createScene() {
     specular: 0xD1F5FD,
     shininess: 100,
   });
-
-  // get two diagonally-opposite corners of the cube and compute the
-  // cylinder axis direction and length
   const maxCorner = new THREE.Vector3(1, 1, 1);
   const minCorner = new THREE.Vector3(-1, -1, -1);
-  // note how you can chain one operation on to another:
   const cylinderAxis = new THREE.Vector3().subVectors(maxCorner, minCorner);
   const cylinderLength = cylinderAxis.length();
 
-  // take dot product of cylinderAxis and up vector to get cosine of angle
   cylinderAxis.normalize();
   const theta = Math.acos(cylinderAxis.dot(new THREE.Vector3(0, 1, 0)));
-  // or just simply theta = Math.acos( cylinderAxis.y );
 
-  // YOUR CODE HERE
-  const cylinder = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.2, 0.2, cylinderLength, 32), cylinderMaterial,
-  );
-  const rotationAxis = new THREE.Vector3(1, 0, -1);
-  // makeRotationAxis wants its axis normalized
-  rotationAxis.normalize();
-  // don't use position, rotation, scale
-  cylinder.matrixAutoUpdate = false;
-  cylinder.matrix.makeRotationAxis(rotationAxis, theta);
-  scene.add(cylinder);
+  const cylinderGeometry = new THREE.CylinderGeometry(0.2, 0.2, cylinderLength, 32);
+  const cylinders = range(4).map((n) => {
+    const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+    // make an x-shaped cross
+    // (-x,-z), (-x,z), (x,-z), (x,z)
+    const x = (n < 2) ? -1 : 1;
+    const z = (n % 2) ? -1 : 1;
+    const rotationAxis = new THREE.Vector3(x, 0, z);
+    rotationAxis.normalize();
+    cylinder.matrixAutoUpdate = false;
+    cylinder.matrix.makeRotationAxis(rotationAxis, theta);
+    cylinder.name = `Cylinder${n}`;
+    return cylinder;
+  });
+  cylinders.forEach((cylinder) => {
+    scene.add(cylinder);
+  });
+
   const showBoundingCube = true;
   if (showBoundingCube) {
     const cubeMaterial = new THREE.MeshLambertMaterial(
@@ -128,6 +129,11 @@ function createScene() {
     );
     scene.add(cube);
   }
+
+  const axes = new THREE.AxesHelper(10);
+  axes.name = 'Axes';
+  scene.add(axes);
+
   return scene;
 }
 
