@@ -101,6 +101,8 @@ function createScene() {
     scene.add(mesh);
   });
 
+  const axes = new THREE.AxesHelper(600);
+  axes.name = 'Axes';
   scene.add(new THREE.AxesHelper(600));
 
   return scene;
@@ -299,7 +301,18 @@ function createHead() {
   hatBody.name = 'HatBody';
   hatBody.position.y = headY + headRadius;
 
-  return [head, hatBrim, hatBody];
+  const [leftEye, rightEye] = createEyes();
+
+  const nose = createNose(headMaterial);
+
+  return [
+    head,
+    hatBrim,
+    hatBody,
+    leftEye,
+    rightEye,
+    nose,
+  ];
 }
 
 function createDrinkingBird() {
@@ -312,7 +325,69 @@ function createDrinkingBird() {
 
   // head + hat
   const headMeshes = createHead();
+
+  const crossbar = createCrossbar();
+
   return supportMeshes
     .concat(bodyMeshes)
-    .concat(headMeshes);
+    .concat(headMeshes)
+    .concat([crossbar]);
+}
+
+function createCrossbar() {
+  const radius = 5;
+  const length = 200;
+  const geometry = new THREE.CylinderGeometry(
+    radius, radius, length, 32,
+  );
+  const material = new THREE.MeshPhongMaterial({
+    color: 0x808080,
+    specular: 0xFFFFFF,
+    shininess: 400,
+  });
+  const crossbar = new THREE.Mesh(geometry, material);
+  crossbar.name = 'Crossbar';
+  crossbar.position.y = 360;
+  crossbar.rotation.x = 90 * (Math.PI / 180);
+  return crossbar;
+}
+
+function createEyes() {
+  const radius = 10;
+  const geometry = new THREE.SphereGeometry(radius, 32, 16);
+  const material = new THREE.MeshPhongMaterial({
+    color: 0x000000,
+    specular: 0x303030,
+    shininess: 4,
+  });
+  const rightEye = createEye(geometry, material, 20);
+  const leftEye = createEye(geometry, material, -20);
+  return [rightEye, leftEye];
+}
+
+function createEye(geometry, material, yRotation) {
+  const eye = new THREE.Group();
+  eye.name = 'Eye';
+  eye.rotation.y = yRotation * (Math.PI / 180);
+  const sphere = new THREE.Mesh(geometry, material);
+  sphere.name = 'Sphere';
+  sphere.position.x = -48;
+  sphere.position.y = 560;
+  eye.add(sphere);
+  return eye;
+}
+
+function createNose(material) {
+  const radiusTop = 6;
+  const radiusBottom = 14;
+  const height = 70;
+  const geometry = new THREE.CylinderGeometry(
+    radiusTop, radiusBottom, height, 32,
+  );
+  const nose = new THREE.Mesh(geometry, material);
+  nose.name = 'Nose';
+  nose.position.x = -70;
+  nose.position.y = 530;
+  nose.rotation.z = 90 * (Math.PI / 180);
+  return nose;
 }
