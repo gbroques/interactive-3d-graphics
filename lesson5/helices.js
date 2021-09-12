@@ -118,6 +118,7 @@ function createScene() {
     arc,
     true,
   );
+  helix.name = 'Red';
   helix.position.y = height / 2;
   scene.add(helix);
 
@@ -131,6 +132,7 @@ function createScene() {
     arc,
     false,
   );
+  helix.name = 'Green';
   helix.position.y = height / 2;
   scene.add(helix);
 
@@ -145,6 +147,7 @@ function createScene() {
     arc,
     false,
   );
+  helix.name = 'Blue1';
   helix.position.y = height / 2;
   helix.position.z = 2.5 * radius;
   scene.add(helix);
@@ -159,6 +162,7 @@ function createScene() {
     arc,
     false,
   );
+  helix.name = 'Blue2';
   helix.rotation.y = 120 * (Math.PI / 180);
   helix.position.y = height / 2;
   helix.position.z = 2.5 * radius;
@@ -174,6 +178,7 @@ function createScene() {
     arc,
     true,
   );
+  helix.name = 'Gray';
   helix.position.y = height / 2;
   helix.position.x = 2.5 * radius;
   scene.add(helix);
@@ -188,6 +193,7 @@ function createScene() {
     4 * arc,
     false,
   );
+  helix.name = 'Yellow';
   helix.position.y = height / 2;
   helix.position.x = 2.5 * radius;
   helix.position.z = -2.5 * radius;
@@ -203,6 +209,7 @@ function createScene() {
     2 * arc,
     false,
   );
+  helix.name = 'Cyan';
   helix.position.y = height / 2;
   helix.position.x = 2.5 * radius;
   helix.position.z = 2.5 * radius;
@@ -218,17 +225,13 @@ function createScene() {
     arc,
     true,
   );
-  helix.rotation.x = 45 * Math.PI / 180;
+  helix.name = 'Magenta';
+  helix.rotation.x = 45 * (Math.PI / 180);
   helix.position.y = height / 2;
   helix.position.z = -2.5 * radius;
   scene.add(helix);
   return scene;
 }
-
-/// /////////////////////////////////////////////////////////////////////////////
-// Helix: replace spheres with capsules (cheese logs)
-// Your task is to modify the createHelix function
-/// /////////////////////////////////////////////////////////////////////////////
 
 /**
 * Returns a THREE.Object3D helix going from top to bottom positions
@@ -255,29 +258,30 @@ function createHelix(
   tubularSegments = (tubularSegments === undefined) ? 32 : tubularSegments;
 
   const helix = new THREE.Object3D();
-
-  const top = new THREE.Vector3();
-
   const sineSign = clockwise ? 1 : -1;
 
-  /// ////////////
-  // YOUR CODE HERE: remove spheres, use capsules instead, going from point to point.
-  //
-  const sphGeom = new THREE.SphereGeometry(tube, tubularSegments, tubularSegments / 2);
-  for (let i = 0; i <= arc * radialSegments; i++) {
+  const numberOfSpheres = arc * radialSegments + 1;
+  const spherePositions = range(numberOfSpheres).map((i) => {
+    const position = new THREE.Vector3();
     // going from X to Z axis
     const radians = ((i * 2) * Math.PI) / radialSegments;
-    top.set(radius * Math.cos(radians),
+    position.set(
+      radius * Math.cos(radians),
       height * (i / (arc * radialSegments)) - height / 2,
-      sineSign * radius * Math.sin(radians));
-
-    const sphere = new THREE.Mesh(sphGeom, material);
-    sphere.position.copy(top);
-
-    helix.add(sphere);
-  }
-  /// ////////////
-
+      sineSign * radius * Math.sin(radians),
+    );
+    return position;
+  });
+  const windows = createWindows(spherePositions);
+  windows.forEach(([bottom, top], i) => {
+    const openBottom = false;
+    const openTop = i !== windows.length - 1;
+    const capsule = createCapsule(
+      material, tube, top, bottom, tubularSegments, openTop, openBottom,
+    );
+    capsule.name = `Capsule${i}`;
+    helix.add(capsule);
+  });
   return helix;
 }
 
@@ -364,4 +368,25 @@ function makeLengthAngleAxisTransform(cyl, cylAxis, center) {
   const rotMatrix = new THREE.Matrix4();
   rotMatrix.makeRotationAxis(rotationAxis, theta);
   cyl.matrix.multiply(rotMatrix);
+}
+
+function range(n) {
+  return [...Array(n).keys()];
+}
+
+/**
+ * @example
+ * createWindows([1, 2, 3, 4, 5])
+ * [[1, 2], [2, 3], [3, 4], [4, 5]]
+ */
+function createWindows(array, size = 2) {
+  return array
+    .reduce((acc, _, index, arr) => {
+      if (index + size > arr.length) {
+        return acc;
+      }
+      return acc.concat(
+        [arr.slice(index, index + size)],
+      );
+    }, []);
 }
