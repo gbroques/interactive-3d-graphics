@@ -33,3 +33,4 @@ Notes for [Udacity's Interactive 3D Graphics course](https://www.udacity.com/cou
 * [Lesson 3: Colors and Materials](./lesson3/README.md)
 * [Lesson 4: Transforms](./lesson4/README.md)
 * [Lesson 5: Matrices](./lesson5/README.md)
+* [Lesson 6: Lights](./lesson6/README.md)
