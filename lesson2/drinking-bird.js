@@ -103,7 +103,7 @@ function createScene() {
 
   const axes = new THREE.AxesHelper(600);
   axes.name = 'Axes';
-  scene.add(new THREE.AxesHelper(600));
+  scene.add(axes);
 
   return scene;
 }
