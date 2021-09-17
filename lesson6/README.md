@@ -159,3 +159,46 @@ object3D.receiveShadow = true;
 
 ![Peter Panning](./img/peter-panning.png)
 
+## Ray Tracing
+
+**Local Illumination Models** - An object is affected by a light and the result is sent to the eye. Light only comes from light sources. Not reflected by any other objects.
+
+Many more light paths can be tracked. One rendering technique to simulate these is called **ray tracing**.
+
+Capable of producing:
+
+* shadows
+* sharp reflections
+* and refraction
+
+![Ray Tracing](./img/ray-tracing.png)
+
+## What paths are not covered by ray tracing?
+
+* Light -> Object -> Diffuse object
+* Light -> Mirror object
+
+Any paths from lights are ignored in classical ray tracing.
+
+## Path Tracing
+Tracking the various paths that light can take to reach the light.
+
+Shoot a lot more rays per pixel and bounce them around in hopes of finding light sources.
+
+Called *path tracing*.
+
+Noisy to start, but can get a realistic result given enough time.
+
+> Path tracing is a realistic lighting algorithm that simulates light bouncing around a scene. 
+
+http://madebyevan.com/webgl-path-tracing/
+
+## Umbra & Penumbra
+
+Not captured well by *shadow mapping*.
+
+Shadow mapping assumes light comes from an infinitesimal point.
+
+All lights have an area.
+
+![Umbra & Penumbra](./img/umbra-and-penumbra.png)
