@@ -75,3 +75,87 @@ const material = new THREE.MeshLambertMaterial({color: new THREE.Color(0.8, 0.2,
 // set the ambient to match the diffuse color
 material.ambient.copy(material.color);
 ```
+
+## [Spot Light](https://threejs.org/docs/#api/en/lights/SpotLight)
+
+* Like a point light, has position
+* Like a directional light, have to point it somewhere
+
+**One Important Addition**
+Control of the cone of light it forms.
+
+Angle where spot light ends - `angle`.
+
+## Deferred Rendering
+
+Lights are expensive.
+
+Every light is yet another light that must be evaluated for a surface.
+
+One way around this is *deferred rendering*.
+
+Normally when you render a surface the fragment color for each pixel is stored, if it's the closest visible object. Called *forward rendering*.
+
+![Forward Rendering](./img/forward-rendering.png)
+
+In *Deferred Rendering*, you instead store data of some sort at each pixel.
+
+Many variations like *deferred shading* and *deferred lighting*.
+
+Every point light has an upper limit as to how far the light goes. It forms a volume in space (e.g. sphere, screen-aligned rectangle).
+
+Whatever surface inside volume is affected by light.
+
+A huge number of lights with a limited volume can be evaluated in this way.
+
+Geometry's purpose is to test only the pixels in range of the light.
+
+As opposed to standard lights, where every light is evaluated for every surface at every pixel.
+
+![Deferred Rendering](./img/deferred-rendering.png)
+
+## Shadow Mapping
+
+Render the scene from the point of the view of the light.
+
+If a light doesn't see a surface, the surface is in shadow.
+
+[Casting Curved Shadows on Curved Surfaces, Lance Williams 1978](http://artis.imag.fr/~Cyril.Soler/DEA/Ombres/Papers/William.Sig78.pdf)
+
+![Shadow Mapping](./img/shadow-mapping.png)
+
+The shadow map algorithm creates a shadow image of the scene from the light's view, called the *shadow buffer*. This is similar to the z-buffer.
+
+(*black closer to the light*)
+
+![Shadow Buffer](./img/shadow-buffer.png)
+
+## Shadows in Three.js
+
+In Three.js, shadows must be enabled and are disabled by default.
+
+```js
+renderer.shadowMap.enabled = true;
+
+spotLight.castShadow = true;
+
+object3D.castShadow = true;
+object3D.receiveShadow = true;
+```
+
+## Shadow Buffer Limitations
+
+![Shadow Buffer Limitations](./img/shadow-buffer-limitations.png)
+
+**Surface Acne** - Problem where dark patches show up where light patches should be.
+
+**Peter Panning** - Increasing *shadow bias* causes object to appear to float, like Peter Pan.
+
+### Surface Acne
+
+![Surface Acne](./img/surface-acne.png)
+
+### Peter Panning
+
+![Peter Panning](./img/peter-panning.png)
+
