@@ -202,3 +202,22 @@ Shadow mapping assumes light comes from an infinitesimal point.
 All lights have an area.
 
 ![Umbra & Penumbra](./img/umbra-and-penumbra.png)
+
+## Hemisphere Light
+
+* Simulates surrounding bounced light in the scene.
+* Fully surrounds the scene with light coming from every direction
+* Like Ambient Light but with important difference
+* Light color on top, and bottom
+
+## Fog
+
+* Somewhere between light and camera effect
+
+Three.js has 2 simple types of fog:
+
+1. [linear fog](https://threejs.org/docs/?q=FogExp2#api/en/scenes/Fog)
+  * defined by min and max distances
+2. [exponential fog (FogExp2)](https://threejs.org/docs/?q=FogExp2#api/en/scenes/FogExp2)
+  * defined by a density of particles
+
